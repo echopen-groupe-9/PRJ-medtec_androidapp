@@ -3,8 +3,24 @@ package com.echopen.asso.echopen;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.echopen.asso.echopen.echography_image_streaming.EchographyImageStreamingService;
+import com.echopen.asso.echopen.echography_image_streaming.modes.EchographyImageStreamingConnectionType;
+import com.echopen.asso.echopen.echography_image_streaming.modes.EchographyImageStreamingMode;
+import com.echopen.asso.echopen.echography_image_streaming.modes.EchographyImageStreamingTCPMode;
+import com.echopen.asso.echopen.echography_image_visualisation.EchographyImageVisualisationContract;
+import com.echopen.asso.echopen.echography_image_visualisation.EchographyImageVisualisationPresenter;
+import com.echopen.asso.echopen.model.EchoImage.EchoCharImage;
+import com.echopen.asso.echopen.utils.Ln;
+import com.echopen.asso.echopen.utils.Timer;
+
+import static com.echopen.asso.echopen.utils.Constants.Http.REDPITAYA_PORT;
 
 /**
  * MainActivity class handles the main screen of the app.
@@ -17,7 +33,13 @@ import android.os.Bundle;
  * These two methods should be refactored into one
  */
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements EchographyImageVisualisationContract.View {
+
+
+    ImageView echo_image;
+
+
+    private static final String TAG = "MyActivity";
 
     /**
      * This method calls all the UI methods and then gives hand to  UDPToBitmapDisplayer class.
@@ -30,6 +52,23 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        EchOpenApplication echOpenApplication = (EchOpenApplication) getApplication();
+
+        final EchographyImageStreamingService serviceEcho =  echOpenApplication.getEchographyImageStreamingService();
+
+        EchographyImageVisualisationPresenter presenter = new EchographyImageVisualisationPresenter(serviceEcho, this);
+        EchographyImageStreamingMode mode = new EchographyImageStreamingTCPMode("10.191.4.59", REDPITAYA_PORT);
+        serviceEcho.connect(mode, this);
+
+        presenter.start();
+
+
+
+
+
+
+
     }
 
     @Override
@@ -51,5 +90,36 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void refreshImage(final Bitmap iBitmap) {
+
+        Log.d("IMGJIBEEEEE", iBitmap+"");
+
+        try{
+            new Runnable() {
+                @Override
+                public void run() {
+                    ImageView echoImage = (ImageView) findViewById(R.id.echo_view);
+                    echoImage.setImageBitmap(iBitmap);
+                    Timer.logResult("Display Bitmap");
+                }
+
+            };
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+
+
+    @Override
+    public void setPresenter(EchographyImageVisualisationContract.Presenter presenter) {
+
     }
 }

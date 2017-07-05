@@ -24,12 +24,12 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn:
-                goDetailsActivity();
+                goMainActivity();
                 break;
         }
     }
 
-    private void goDetailsActivity(){
+    private void goMainActivity(){
         Intent intent = new Intent(HomeActivity.this,MainActivity.class);
         startActivity(intent);
     }

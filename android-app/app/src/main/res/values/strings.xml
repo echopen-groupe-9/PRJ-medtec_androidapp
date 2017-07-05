@@ -7,4 +7,10 @@
     <string name="btn_start_home">Démarrer un examen</string>
     <string name="btn_login_home">Se connecter</string>
     <string name="title_activity_menu">MenuActivity</string>
+    <string name="btn_edit_profil">Editer mon profil</string>
+    <string name="btn_echographies">Echographies</string>
+    <string name="btn_signal">Signaler un problème</string>
+    <string name="btn_faq">FAQ</string>
+    <string name="btn_langues">Langues</string>
+    <string name="btn_logout">Se déconnecter</string>
 </resources>

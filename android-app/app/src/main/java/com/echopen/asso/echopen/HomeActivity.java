@@ -15,7 +15,6 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_home);
-
         Button btn = (Button) findViewById(R.id.btn);
         btn.setOnClickListener(HomeActivity.this);
     }

@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements EchographyImageVisualisati
 
     ImageView echo_image;
     EchographyImageStreamingService serviceEcho;
+    EchographyImageVisualisationPresenter presenter;
 
     private static final String TAG = "MyActivity";
 
@@ -61,37 +62,22 @@ public class MainActivity extends Activity implements EchographyImageVisualisati
 
         RenderingContextController rdController = new RenderingContextController();
         serviceEcho = new EchographyImageStreamingService(rdController);
-        final EchographyImageVisualisationPresenter presenter = new EchographyImageVisualisationPresenter(serviceEcho, this);
+        presenter = new EchographyImageVisualisationPresenter(serviceEcho, this);
 
         EchographyImageStreamingMode mode = new EchographyImageStreamingTCPMode("192.168.10.1", REDPITAYA_PORT);
-        serviceEcho.connect(mode, this);
-        presenter.start();
+       /* serviceEcho.connect(mode, this);
+        presenter.start();*/
 
         final Button btn_capture = (Button) findViewById(R.id.btn_capture);
         final Button btn_save = (Button) findViewById(R.id.btn_save);
-        final TextView txtview = (TextView) findViewById(R.id.txt_view_main);
+        final Button txtview = (Button) findViewById(R.id.btn_menu_main);
 
-        txtview.setOnClickListener(MainActivity.this);
+
         btn_save.setVisibility(View.INVISIBLE);
 
-        btn_capture.setOnClickListener(new View.OnClickListener() {
-            //Freeze picture & hide take button
-            public void onClick(View v) {
-                serviceEcho.deleteObservers();
-                btn_capture.setVisibility(View.INVISIBLE);
-                btn_save.setVisibility(View.VISIBLE);
-            }
-        });
-
-        btn_save.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Picture Saved" ,Toast.LENGTH_SHORT );
-                toast.show();
-                presenter.start();
-                btn_capture.setVisibility(View.VISIBLE);
-                btn_save.setVisibility(View.INVISIBLE);
-            }
-        });
+        btn_capture.setOnClickListener(MainActivity.this);
+        btn_save.setOnClickListener(MainActivity.this);
+        txtview.setOnClickListener(MainActivity.this);
     }
 
     @Override
@@ -141,20 +127,29 @@ public class MainActivity extends Activity implements EchographyImageVisualisati
 
     @Override
     public void onClick(View v) {
+        Button btn_capture = (Button) findViewById(R.id.btn_capture);
+        Button btn_save = (Button) findViewById(R.id.btn_save);
         switch(v.getId()){
             case R.id.btn_capture:
                 serviceEcho.deleteObservers();
-                Button btn_capture = (Button) findViewById(R.id.btn_capture);
-                Button btn_save = (Button) findViewById(R.id.btn_save);
                 btn_capture.setVisibility(View.INVISIBLE);
                 btn_save.setVisibility(View.VISIBLE);
                 break;
-            case R.id.btn:
-                Log.d("Log","Lo d");
+            case R.id.btn_save:
+                Toast toast = Toast.makeText(getApplicationContext(), "Picture Saved" ,Toast.LENGTH_SHORT );
+                toast.show();
+                presenter.start();
+                btn_capture.setVisibility(View.VISIBLE);
+                btn_save.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.btn_menu_main:
+                goMenuActivity();
+                break;
         }
     }
 
-    public void test (EchographyImageStreamingService service){
-
+    private void goMenuActivity(){
+        Intent intent = new Intent(MainActivity.this,MenuActivity.class);
+        startActivity(intent);
     }
 }

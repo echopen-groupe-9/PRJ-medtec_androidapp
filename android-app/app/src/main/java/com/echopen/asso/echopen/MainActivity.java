@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.echopen.asso.echopen.echography_image_streaming.EchographyImageStreamingService;
@@ -22,6 +23,8 @@ import com.echopen.asso.echopen.model.EchoImage.EchoCharImage;
 import com.echopen.asso.echopen.ui.RenderingContextController;
 import com.echopen.asso.echopen.utils.Ln;
 import com.echopen.asso.echopen.utils.Timer;
+
+import org.w3c.dom.Text;
 
 import static com.echopen.asso.echopen.utils.Constants.Http.REDPITAYA_PORT;
 
@@ -36,11 +39,11 @@ import static com.echopen.asso.echopen.utils.Constants.Http.REDPITAYA_PORT;
  * These two methods should be refactored into one
  */
 
-public class MainActivity extends Activity implements EchographyImageVisualisationContract.View {
+public class MainActivity extends Activity implements EchographyImageVisualisationContract.View, View.OnClickListener {
 
 
     ImageView echo_image;
-
+    EchographyImageStreamingService serviceEcho;
 
     private static final String TAG = "MyActivity";
 
@@ -57,7 +60,7 @@ public class MainActivity extends Activity implements EchographyImageVisualisati
         setContentView(R.layout.activity_main);
 
         RenderingContextController rdController = new RenderingContextController();
-        final EchographyImageStreamingService serviceEcho = new EchographyImageStreamingService(rdController);
+        serviceEcho = new EchographyImageStreamingService(rdController);
         final EchographyImageVisualisationPresenter presenter = new EchographyImageVisualisationPresenter(serviceEcho, this);
 
         EchographyImageStreamingMode mode = new EchographyImageStreamingTCPMode("192.168.10.1", REDPITAYA_PORT);
@@ -66,6 +69,9 @@ public class MainActivity extends Activity implements EchographyImageVisualisati
 
         final Button btn_capture = (Button) findViewById(R.id.btn_capture);
         final Button btn_save = (Button) findViewById(R.id.btn_save);
+        final TextView txtview = (TextView) findViewById(R.id.txt_view_main);
+
+        txtview.setOnClickListener(MainActivity.this);
         btn_save.setVisibility(View.INVISIBLE);
 
         btn_capture.setOnClickListener(new View.OnClickListener() {
@@ -86,10 +92,6 @@ public class MainActivity extends Activity implements EchographyImageVisualisati
                 btn_save.setVisibility(View.INVISIBLE);
             }
         });
-
-
-
-
     }
 
     @Override
@@ -135,5 +137,24 @@ public class MainActivity extends Activity implements EchographyImageVisualisati
     @Override
     public void setPresenter(EchographyImageVisualisationContract.Presenter presenter) {
         presenter.start();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.btn_capture:
+                serviceEcho.deleteObservers();
+                Button btn_capture = (Button) findViewById(R.id.btn_capture);
+                Button btn_save = (Button) findViewById(R.id.btn_save);
+                btn_capture.setVisibility(View.INVISIBLE);
+                btn_save.setVisibility(View.VISIBLE);
+                break;
+            case R.id.btn:
+                Log.d("Log","Lo d");
+        }
+    }
+
+    public void test (EchographyImageStreamingService service){
+
     }
 }

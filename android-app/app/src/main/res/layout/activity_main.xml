@@ -1,13 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/black">
 
-
-    <RelativeLayout
+    <!--<RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent">-->
+
+        <TextView
+            android:id="@+id/txt_view_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:text="Menu"/>
 
         <ImageView
             android:id="@+id/echo_view"
@@ -35,8 +44,8 @@
             />
 
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
 
-</LinearLayout>
+</RelativeLayout>
 
